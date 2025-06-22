@@ -4,7 +4,7 @@ pipeline {
 	 IMAGE_NAME = "connectwise-rmm-agent"
 	 IMAGE_TAG = "${BUILD_NUMBER}"
 	 DOCKER_REPO = "ambarbhore1234"
-	 K8S_DEPLOYMENT = "k8/s"
+	 K8S_DEPLOYMENT = "k8s"
 	 KUBECONFIG = credentials('k8s-jenkins-kubeconfig')
      }
      stages {
@@ -26,5 +26,31 @@ pipeline {
 		sh 'docker build -t ${DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG} .'
 	    }
 	}
-      }
+	stage('Push Image to docker hub') {
+	    steps {
+		echo "Pushing docker image to the docker hub"
+		withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+		    sh """
+		    echo "$PASS" | docker login -u "$USER" --password-stdin
+		    docker push ${DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG}
+		    """
+		}
+	    }
+	}
+	stage('Deploy to kubernetes') {
+	    steps {
+		echo "deploying the latest docker image to the k8s: "
+		sh """
+		     kubectl apply -n dev -f ${k8s}/deployment.yaml
+		     kubectl apply -f dev -n ${k8s}/service.yaml
+		     
+		     kubectl set image deployment/rmm-agent rmm-agent={DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG} -n dev
+		     
+		     # show rollout history and rollout status
+		     kubectl rollout status deployment/rmm-agent -n dev
+		     kubectl rollout history deployment/rmm-agent -n dev
+		"""
+	    }
+        }
+    }
 }
