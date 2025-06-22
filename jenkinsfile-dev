@@ -1,0 +1,30 @@
+pipeline {
+     agent any 
+     environment {
+	 IMAGE_NAME = "connectwise-rmm-agent"
+	 IMAGE_TAG = "${BUILD_NUMBER}"
+	 DOCKER_REPO = "ambarbhore1234"
+	 K8S_DEPLOYMENT = "k8/s"
+	 KUBECONFIG = credentials('k8s-jenkins-kubeconfig')
+     }
+     stages {
+	stage('checkout code') {
+	    steps {
+		echo 'checking out the source code'
+		checkout scm
+	    }
+	}
+	stage('Build with Maven') {
+	    steps {
+		echo 'Building JAR with Maven .........'
+		sh 'mvn clean package'
+	    }
+	}
+	stage('Build docker Image') {
+	    steps {
+		echo "Building docker image ${DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG}"
+		sh 'docker build -t ${DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG} .'
+	    }
+	}
+      }
+}
