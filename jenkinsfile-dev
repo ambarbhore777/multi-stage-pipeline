@@ -41,8 +41,8 @@ pipeline {
 	    steps {
 		echo "deploying the latest docker image to the k8s: "
 		sh """
-		     kubectl apply -n dev -f ${k8s}/deployment.yaml
-		     kubectl apply -n dev -f ${k8s}/service.yaml
+		     kubectl apply -n dev -f ${K8S_DEPLOYMENT}/deployment.yaml
+		     kubectl apply -n dev -f ${k8S_DEPLOYMENT}/service.yaml
 		     
 		     kubectl set image deployment/rmm-agent rmm-agent={DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG} -n dev
 		     
