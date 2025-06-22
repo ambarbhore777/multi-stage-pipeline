@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rmm-agent
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rmm-agent
+  template:
+    metadata:
+      labels:
+        app: rmm-agent
+    spec:
+      containers:
+      - name: rmm-agent
+        image: ambarbhore1234/connectwise-rmm-agent
+        ports:
+        - containerPort: 8080
+
