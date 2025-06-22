@@ -15,21 +15,4 @@ pipeline {
             echo 'Stage pipeline finished!'
         }
     }
-}pipeline {
-    agent any
-
-    stages {
-        stage('Stage Deploy') {
-            steps {
-                echo 'This is Stage Environment'
-                echo 'Deploying to Stage...'
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Stage pipeline finished!'
-        }
-    }
 }
