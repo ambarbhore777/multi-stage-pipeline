@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: rmm-agent
-        image: ambarbhore1234/connectwise-rmm-agent
+        image: ambarbhore1234/connectwise-rmm-agent:${BUILD_NUMBER}
         ports:
         - containerPort: 8080
 
