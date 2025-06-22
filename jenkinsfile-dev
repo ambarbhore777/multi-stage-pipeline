@@ -52,13 +52,13 @@ pipeline {
 		"""
 	    }
         }
-	post {
-	     success {
-		build job: 'stage-job',
-		      parameters: [
-			  string(name: 'BUILD_TAG', value: "${env.BUILD_NUMBER}")
-		      ]
-	    }
-       }
-    }
+     }   
+     post {
+	success {
+	     build job: 'stage-job',
+		   parameters: [
+		        string(name: 'BUILD_TAG', value: "${env.BUILD_NUMBER}")
+		   ]
+	 }
+     }
 }
