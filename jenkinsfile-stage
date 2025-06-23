@@ -1,18 +1,25 @@
 pipeline {
-    agent any
+      agent any 
+      environment {
+	  DOCKER_IMAGE = "connectwise-rmm-agent"
+          BUILD_TAG = "${env.BUILD_NUMBER}"
+	  DOCKER_REPO = "ambarbhore1234"
+	  
+      }
 
-    stages {
-        stage('Stage Deploy') {
-            steps {
-                echo 'This is Stage Environment'
-                echo 'Deploying to Stage...'
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Stage pipeline finished!'
-        }
-    }
+      stages {
+	  stage('Checkout Code') {
+	     steps {
+		 git branch: 'stage', url: 'https://github.com/ambarbhore777/multi-stage-pipeline.git'
+	     }
+	  }
+	  stage('Pull Dev Image') {
+	     steps {
+		script {
+		    sh "docker pull ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_TAG}"
+		}
+	    }
+	 }
+      }
 }
+      
