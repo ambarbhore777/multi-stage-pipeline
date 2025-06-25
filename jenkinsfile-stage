@@ -1,9 +1,14 @@
 pipeline {
       agent any 
+      parameters {
+	   string(name: 'IMAGE_TAG', defaultValue: '', description: 'Image tag to deploy')
+      }
+      
       environment {
 	  DOCKER_IMAGE = "connectwise-rmm-agent"
           BUILD_TAG = "${env.BUILD_NUMBER}"
 	  DOCKER_REPO = "ambarbhore1234"
+	  KUBE_NAMESPACE = "stage"
 	  
       }
 
