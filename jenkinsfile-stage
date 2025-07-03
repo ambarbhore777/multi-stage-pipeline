@@ -21,7 +21,7 @@ pipeline {
 	  stage('Pull Dev Image') {
 	     steps {
 		script {
-		    sh "docker pull ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_TAG}"
+		    sh "docker pull ${DOCKER_REPO}/${DOCKER_IMAGE}:${IMAGE_TAG}"
 		}
 	    }
 	 }
